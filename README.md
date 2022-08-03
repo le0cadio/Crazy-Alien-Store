@@ -38,4 +38,9 @@ the alien, and (3) a close-up shot that features a video game.
 # UI - Buttons to switch between camera angles
 - Menu with audio controls
 
+# Printscreen 
+
+![image](https://user-images.githubusercontent.com/99060199/182673303-3ffd97de-3b28-4995-a01c-7cbe777437e4.png)
+
+
 
