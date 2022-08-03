@@ -36,7 +36,11 @@ namespace UnityTemplateProjects
                 z += rotatedTranslation.z;
             }
 
-            public void LerpTowards(CameraState target, float positionLerpPct, float rotationLerpPct)
+            public void LerpTowards(
+                CameraState target,
+                float positionLerpPct,
+                float rotationLerpPct
+            )
             {
                 yaw = Mathf.Lerp(yaw, target.yaw, rotationLerpPct);
                 pitch = Mathf.Lerp(pitch, target.pitch, rotationLerpPct);
@@ -63,7 +67,10 @@ namespace UnityTemplateProjects
         [Tooltip("Exponential boost factor on translation, controllable by mouse wheel.")]
         public float boost = 3.5f;
 
-        [Tooltip("Time it takes to interpolate camera position 99% of the way to the target."), Range(0.001f, 1f)]
+        [
+            Tooltip("Time it takes to interpolate camera position 99% of the way to the target."),
+            Range(0.001f, 1f)
+        ]
         public float positionLerpTime = 0.2f;
 
         [Header("Rotation Settings")]
@@ -71,9 +78,15 @@ namespace UnityTemplateProjects
         public float mouseSensitivity = 60.0f;
 
         [Tooltip("X = Change in mouse position.\nY = Multiplicative factor for camera rotation.")]
-        public AnimationCurve mouseSensitivityCurve = new AnimationCurve(new Keyframe(0f, 0.5f, 0f, 5f), new Keyframe(1f, 2.5f, 0f, 0f));
+        public AnimationCurve mouseSensitivityCurve = new AnimationCurve(
+            new Keyframe(0f, 0.5f, 0f, 5f),
+            new Keyframe(1f, 2.5f, 0f, 0f)
+        );
 
-        [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
+        [
+            Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."),
+            Range(0.001f, 1f)
+        ]
         public float rotationLerpTime = 0.01f;
 
         [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
@@ -84,7 +97,7 @@ namespace UnityTemplateProjects
         InputAction verticalMovementAction;
         InputAction lookAction;
         InputAction boostFactorAction;
-        bool        mouseRightButtonPressed;
+        bool mouseRightButtonPressed;
 
         void Start()
         {
@@ -96,7 +109,8 @@ namespace UnityTemplateProjects
             boostFactorAction = map.AddAction("Boost Factor", binding: "<Mouse>/scroll");
 
             lookAction.AddBinding("<Gamepad>/rightStick").WithProcessor("scaleVector2(x=15, y=15)");
-            movementAction.AddCompositeBinding("Dpad")
+            movementAction
+                .AddCompositeBinding("Dpad")
                 .With("Up", "<Keyboard>/w")
                 .With("Up", "<Keyboard>/upArrow")
                 .With("Down", "<Keyboard>/s")
@@ -105,7 +119,8 @@ namespace UnityTemplateProjects
                 .With("Left", "<Keyboard>/leftArrow")
                 .With("Right", "<Keyboard>/d")
                 .With("Right", "<Keyboard>/rightArrow");
-            verticalMovementAction.AddCompositeBinding("Dpad")
+            verticalMovementAction
+                .AddCompositeBinding("Dpad")
                 .With("Up", "<Keyboard>/pageUp")
                 .With("Down", "<Keyboard>/pageDown")
                 .With("Up", "<Keyboard>/e")
@@ -119,7 +134,6 @@ namespace UnityTemplateProjects
             verticalMovementAction.Enable();
             boostFactorAction.Enable();
         }
-
 #endif
 
         void OnEnable()
@@ -193,11 +207,14 @@ namespace UnityTemplateProjects
             // Rotation
             if (IsCameraRotationAllowed())
             {
-                var mouseMovement = GetInputLookRotation() * k_MouseSensitivityMultiplier * mouseSensitivity;
+                var mouseMovement =
+                    GetInputLookRotation() * k_MouseSensitivityMultiplier * mouseSensitivity;
                 if (invertY)
                     mouseMovement.y = -mouseMovement.y;
 
-                var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
+                var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(
+                    mouseMovement.magnitude
+                );
 
                 m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
                 m_TargetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
@@ -220,9 +237,15 @@ namespace UnityTemplateProjects
 
             // Framerate-independent interpolation
             // Calculate the lerp amount, such that we get 99% of the way to our target in the specified time
-            var positionLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / positionLerpTime) * Time.deltaTime);
-            var rotationLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / rotationLerpTime) * Time.deltaTime);
-            m_InterpolatingCameraState.LerpTowards(m_TargetCameraState, positionLerpPct, rotationLerpPct);
+            var positionLerpPct =
+                1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / positionLerpTime) * Time.deltaTime);
+            var rotationLerpPct =
+                1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / rotationLerpTime) * Time.deltaTime);
+            m_InterpolatingCameraState.LerpTowards(
+                m_TargetCameraState,
+                positionLerpPct,
+                rotationLerpPct
+            );
 
             m_InterpolatingCameraState.UpdateTransform(transform);
         }
@@ -273,7 +296,10 @@ namespace UnityTemplateProjects
         {
 #if ENABLE_INPUT_SYSTEM
             bool canRotate = Mouse.current != null ? Mouse.current.rightButton.isPressed : false;
-            canRotate |= Gamepad.current != null ? Gamepad.current.rightStick.ReadValue().magnitude > 0 : false;
+            canRotate |=
+                Gamepad.current != null
+                    ? Gamepad.current.rightStick.ReadValue().magnitude > 0
+                    : false;
             return canRotate;
 #else
             return Input.GetMouseButton(1);
