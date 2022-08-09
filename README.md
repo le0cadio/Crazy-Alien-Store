@@ -1,5 +1,5 @@
 # Crazy-Alien-Store
-Learn new things like Shaders and materials, Lighting, Animation, VFX, Cameras, Post-Processing, Audio, UI and Prototyping 
+Repository to learn new things like Shaders and materials, Lighting, Animation, VFX, Cameras, Post-Processing, Audio, UI and Prototyping 
 
 Design Document
 Overview
